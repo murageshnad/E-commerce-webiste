@@ -279,7 +279,7 @@ async function insertRecord(req, res) {
         shop.createdBy = docs._id;
         shop.save((err, docs) => {
             if (!err) {
-                console.log("inserted===");
+                //console.log("inserted===");
                 res.render("products/login", {
                     viewTitle: "Login HERE"
                 });
