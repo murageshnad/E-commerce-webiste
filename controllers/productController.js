@@ -10,6 +10,143 @@ var multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const methodOverride = require('method-override');
+const sharp = require('sharp')
+const { uuid } = require('uuidv4');
+
+var fs = require('fs');
+var dir = './uploads';
+
+// Multer single file parser
+const upload = multer({ limits: { fileSize: 4000000 } }).single('myimage');
+
+
+
+// var upload = multer({
+
+//     storage: multer.diskStorage({
+
+//         destination: function (req, file, callback) {
+//             if (!fs.existsSync(dir)) {
+//                 console.log("inside");
+//                 fs.mkdirSync(dir);
+//                 console.log("done");
+//             }
+//             callback(null, './uploads');
+//         },
+//         filename: function (req, file, callback) {
+//             callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+//             console.log("filename");
+//         }
+
+//     }),
+
+//     fileFilter: function (req, file, callback) {
+//         var ext = path.extname(file.originalname)
+//         if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+//             console.log("ext");
+//             return callback(res.end('Only images are allowed'));
+//         }
+//         callback(null, true);
+//     }
+// });
+
+
+router.post('/addProduct', (req, res) => {
+    console.log("inside");
+
+    upload(req, res, async function (err) {
+        console.log("inside upload");
+        // check for error
+        if (err || req.file === undefined) {
+            console.log("error", err);
+            res.send("error occured");
+        } else {
+            // everything worked fine
+            console.log("productName:", req.body.productName);
+            console.log("productPrice:", req.body.productPrice);
+            console.log("req.file", req.file.originalname);
+            let fileName = uuid() + ".jpeg";
+            console.log("fileName", fileName);
+            var image = await sharp(req.file.buffer)
+                //.resize({ width: 400, height:400 }) Resize if you want
+                .jpeg({
+                    quality: 40,
+                }).toFile('./uploads/' + fileName)
+                .catch(err => { console.log('error: ', err) })
+            console.log('image done');
+            var image = {};
+            image['productName'] = req.body.productName;
+            image['productPrice'] = req.body.productPrice;
+            image['image'] = req.file.originalname;
+
+            router.addImage(image, (err, docs) => {
+                if (err) {
+                    console.log(err.message);
+                    throw err;
+                }
+                console.log("Successfully inserted one image!");
+                res.render("products/home", {
+
+                });
+
+            });
+
+
+            //res.send(req.body)
+        }
+    })
+})
+
+
+// router.post('/addProduct', async function (req, res) {
+
+//     // if (req.body._id == '') {
+
+//     // }
+//     await insertProduct(req, res);
+//     console.log("Record inserted");
+//     // else {
+//     //     //console.log("else part");
+//     //     //await updateProduct(req, res);
+//     //     console.log("Record Updated");
+//     // }
+
+// });
+
+// async function insertProduct(req, res) {
+//     var image = {};
+//     // image['productName'] = req.payload.productName;
+//     // image['productPrice'] = req.payload.productPrice;
+//     //image['image'] = req.body.myimage;
+//     //console.log("insert query", req.body.productName);
+//     //console.log("request", req.payload.productName);
+//     // let incomingData = {
+//     //     productName: req.payload.productName,
+//     //     productPrice: req.payload.productPrice
+//     // };
+//     // console.log("incomingData", incomingData);
+
+//     //console.log(image['data']);
+//     // router.addImage(image, (err, docs) => {
+//     //     if (err) {
+//     //         console.log(err.message);
+//     //         throw err;
+//     //     }
+//     //     console.log("Successfully inserted one image!");
+//     //     res.render("products/home", {
+
+//     //     });
+
+//     // });
+
+// }
+
+
+
+
+
+
+
 
 
 router.addImage = function (image, callback) {
@@ -38,6 +175,12 @@ router.get('/addProduct', (req, res) => {
     });
 });
 
+router.get('/modal', (req, res) => {
+    res.render("products/modal", {
+        viewTitle: "Add Product"
+    });
+});
+
 router.get('/listProduct', (req, res) => {
     Product.find((err, docs) => {
         if (!err) {
@@ -59,6 +202,8 @@ router.get('/register', (req, res) => {
         viewTitle: "Register Here"
     });
 });
+
+
 
 
 router.get('/home', (req, res) => {
@@ -141,59 +286,30 @@ router.post('/', async (req, res) => {
 //         }
 //     });
 // }
-var storage = multer.memoryStorage();
-var upload = multer({ storage: storage });
+// var storage = multer.memoryStorage();
+// var upload = multer({ storage: storage });
 
-router.post('/addProduct', upload.any(), async function (req, res) {
 
-    if (req.body._id == '') {
-        await insertProduct(req, res);
-        console.log("Record inserted");
-    }
-    else {
-        //await updateProduct(req, res);
-        console.log("Record Updated");
-    }
-    // var image = {};
-    // image['data'] = req.files[0].buffer;
-    // image['originalname'] = req.files[0].originalname;
-    // image['contentType'] = req.files[0].mimetype;
-    // image['productName'] = req.body.productName;
-    // image['productPrice'] = req.body.productPrice;
 
-    // console.log(image['data']);
-    // router.addImage(image, (err, docs) => {
-    //     if (err) {
-    //         console.log(err.message);
-    //         throw err;
-    //     }
-    //     console.log("Successfully inserted one image!");
-    //     res.render("products/home", {
+// async function insertProduct(req, res) {
+//     var product = new Product();
+//     var image = {};
+//     product.data = req.files[0].buffer;
+//     product.originalname = req.files[0].originalname;
+//     product.contentType = req.files[0].mimetype;
+//     product.productName = req.body.productName;
+//     product.productPrice = req.body.productPrice;
+//     product.save((err, doc) => {
+//         if (err) {
+//             console.log(err.message);
+//             throw err;
+//         }
+//         console.log("Successfully inserted one image!");
+//         res.render("products/home", {
 
-    //     });
-
-    // });
-});
-
-async function insertProduct(req, res) {
-    var product = new Product();
-    var image = {};
-    product.data = req.files[0].buffer;
-    product.originalname = req.files[0].originalname;
-    product.contentType = req.files[0].mimetype;
-    product.productName = req.body.productName;
-    product.productPrice = req.body.productPrice;
-    product.save((err, doc) => {
-        if (err) {
-            console.log(err.message);
-            throw err;
-        }
-        console.log("Successfully inserted one image!");
-        res.render("products/home", {
-
-        });
-    });
-}
+//         });
+//     });
+// }
 
 // async function updateProduct(req, res) {
 //     Product.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, doc) => {
@@ -211,37 +327,54 @@ async function insertProduct(req, res) {
 
 
 
-router.post('/addproduct/:id', upload.any(), async function (req, res) {
 
-    // var image = {};
-    // image['data'] = req.files[0].buffer;
-    // image['originalname'] = req.files[0].originalname;
-    // image['contentType'] = req.files[0].mimetype;
-    // image['productName'] = req.body.productName;
-    // image['productPrice'] = req.body.productPrice;
+router.post('/addproduct/:id', (req, res) => {
+    console.log("inside");
 
-    // console.log(image['data']);
-    // router.updateImage(image, (err, docs) => {
-    //     if (err) {
-    //         console.log(err.message);
-    //         throw err;
-    //     }
-    //     console.log("Successfully inserted one image!");
-    //     res.render("products/home", {
+    upload(req, res, async function (err) {
+        console.log("inside upload");
+        console.log("productName:", req.file);
+        // check for error
+        if (err || req.file === undefined) {
+            console.log("error", err);
+            res.send("error occured");
+        } else {
+            // everything worked fine
+            console.log("productName:", req.body.productName);
+            console.log("productPrice:", req.body.productPrice);
+            console.log("req.file", req.file.originalname);
+            let fileName = uuid() + ".jpeg";
+            console.log("fileName", fileName);
+            var image = await sharp(req.file.buffer)
+                //.resize({ width: 400, height:400 }) Resize if you want
+                .jpeg({
+                    quality: 40,
+                }).toFile('./uploads/' + fileName)
+                .catch(err => { console.log('error: ', err) })
+            console.log('image done');
+            var productName = req.body.productName;
+            var productPrice = req.body.productPrice;
+            var image = req.file.originalname;
 
-    //     });
-    // });
-    Product.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, (err, doc) => {
-        if (err) {
-            console.log(err.message);
-            throw err;
+
+
+            Product.updateOne({ productName: productName, productPrice: productPrice, image: image }, function (err, result) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log("Successfully updated!");
+                    res.render("products/home", {
+
+                    });
+                }
+            });
+
+
+
+
+            //res.send(req.body)
         }
-        console.log("Successfully updated!");
-        res.render("products/home", {
-
-        });
     });
-
 
 });
 
@@ -294,19 +427,26 @@ async function insertRecord(req, res) {
 
 }
 
-router.get('/addproduct/:id', (req, res) => {
+router.get('/updateProduct/:id', (req, res) => {
 
-    // res.render("products/addProduct", {
-    //     viewTitle: "Update Product",
 
-    // });
     Product.findById(req.params.id, (err, doc) => {
         if (!err) {
             console.log("Data", doc);
-            res.render("products/addProduct", {
-                viewTitle: "Update Product",
-                Product: doc
-            });
+            res.json(doc);
+            // res.render("products/addProduct", {
+            //     viewTitle: "Update Product",
+
+            //     Product: [
+            //         {
+            //             productName: doc.productName,
+            //             productPrice: doc.productPrice
+            //         },
+            //     ]
+            // });
+
+
+
         }
     });
 });
@@ -315,12 +455,9 @@ router.get('/addproduct/:id', (req, res) => {
 router.get('/listProduct/:id', (req, res) => {
     Product.findByIdAndRemove(req.params.id, (err, doc) => {
         if (!err) {
-            console.log("Data", doc);
-            res.render("products/listProduct", {
-                viewTitle: "List of Products",
-
-            });
+            res.redirect('/home/listProduct');
         }
+        else { console.log('Error in  delete :' + err); }
     });
 });
 

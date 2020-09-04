@@ -3,16 +3,18 @@ const mongoose = require('mongoose');
 var productDetailSchema = new mongoose.Schema({
     productName: {
         type: String,
-        required: true
+
     },
     productPrice: {
         type: Number,
-        required: true
+
 
     },
-    data: Buffer,
-    originalname: String,
-    contentType: String,
+    added_date: {
+        type: Date,
+        default: Date.now
+    },
+    image: String,
 
 
 });

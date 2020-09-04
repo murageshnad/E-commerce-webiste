@@ -1,4 +1,5 @@
 <!-- Sidebar  -->
+<!-- script src="/assests/js/addProduct/addProduct.js"></script -->
 <nav id="sidebar">
     <div class="sidebar-header">
 
@@ -37,7 +38,9 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-
+            <a href="/login">
+                <p style="color:black;float:right;">LOG OUT</p>
+            </a>
 
             <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -48,7 +51,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="">Log out
+                        {{!-- <a class="nav-link" href="/login">Log out --}}
             </div>
         </div>
     </nav>
@@ -69,11 +72,11 @@
                 </div>
                 <div class="form-group">
                     <label for="exampleFormControlFile1"> Choose Product Image</label>
-                    <input type="file" class="form-control-file" name="myimage" id="imagepath"
-                        value="{{Product.productPrice}}" required>
+                    <p>{{Product.image}}</p>
+                    <input type="file" class="form-control-file" name="myimage" id="imagepath" value="{{Product.image}}"
+                        required>
                 </div>
-                <button type="submit" class="btn btn-primary"
-                    onclick="return alert('Added Product Successfully ...');">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
 
