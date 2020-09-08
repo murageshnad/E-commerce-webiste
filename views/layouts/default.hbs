@@ -319,6 +319,7 @@
     <!-- JS dependencies -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
     </script>
+    <!--script type="text/javascript" src="/js/addProduct/addProduct.js"></script-->
 
     <!-- Bootstrap 4 dependency -->
 
@@ -328,12 +329,13 @@
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
-
             $('#addProduct').on('click', function (responseTxt, statusTxt, xhr) {
                 event.preventDefault();
                 jQuery.noConflict();
                 $("#myModal").modal();
             });
+
+
             $('.editaddProduct').on('click', function (responseTxt, statusTxt, xhr) {
                 event.preventDefault();
                 jQuery.noConflict();
@@ -394,29 +396,17 @@
                 $.ajax({
                     type: 'GET',
                     url: '/home/updateProduct/' + type,
-                    dataType: "json",
+                    // dataType: "json",
                     success: function (response) {
                         if (response) {
                             console.log("data", response);
                             var editForm = $('.editProductForm');
                             var productName;
 
-                            editForm.html('');
-                            console.log("dd", response.productName);
-                            $('.editProductForm').append(`
-                             <input type="hidden" name="_id" id="_id" value=${response._id}>
-                            <label>Product Name</label>
-                               <input type="text" name="product" id="product" class="form-control"  value=${response.productName}>
-                            <br/>
-                            <label>Product Price</label>
-                            <input type="text" class="form-control" name="price" id="price" value=${response.productPrice} required>
-                            <br/>
-                            <label for="exampleFormControlFile1"> Choose Product Image</label>
-                            <p> Image: ${response.image} </p>
-                            <input type="file"  class="form-control-file" name="imagepath" id="imagepath" value=${response.image} required>
-                            <br/>
-                            <button type="submit" id="" class="btn btn-primary updateProducts">Submit</button>
-                        `)
+                            //editForm.html('');
+                            $('.contents').html('').append(response);
+                            //console.log("dd", response.productName);
+
 
                         }
                     },
@@ -429,27 +419,31 @@
 
             }
 
-            $(document).on('submit', '.editProductForm', function () {
+            $('.editProductForm').submit(function () {
 
                 event.preventDefault();
                 jQuery.noConflict();
-                //addingProdcut();
+                var product = document.getElementById('product').value;
+                console.log("product", product);
+                var price = document.getElementById('price').value;
+                console.log("price", price);
+                var imagepath = document.getElementById('imagepath').value;
+                console.log("imagepath", imagepath);
+
+
                 var formData = new FormData()
                 // the text data
                 formData.append('productName', document.getElementById('product').value)
                 formData.append('productPrice', document.getElementById('price').value)
-                console.log("d1", document.getElementById('product').value);
-                console.log("d2", document.getElementById('price').value);
-                var id = document.getElementById('_id').value
-
-                console.log("id", id);
 
                 // since inputs allow multi files submission, therefore files are in array
                 formData.append('myimage', document.getElementById('imagepath').files[0])
+                formData.append('_id', document.getElementById('_id').value)
 
 
                 console.log(document.getElementById('imagepath'))
                 console.log(document.getElementById('imagepath').files)
+                var id = document.getElementById('_id').value;
                 $.ajax({
                     method: 'POST',
                     processData: false,

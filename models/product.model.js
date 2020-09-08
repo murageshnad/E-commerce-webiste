@@ -15,6 +15,7 @@ var productDetailSchema = new mongoose.Schema({
         default: Date.now
     },
     image: String,
+    fileName: String,
 
 
 });

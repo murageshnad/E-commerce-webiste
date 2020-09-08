@@ -78,12 +78,14 @@ router.post('/addProduct', (req, res) => {
             image['productName'] = req.body.productName;
             image['productPrice'] = req.body.productPrice;
             image['image'] = req.file.originalname;
+            image['fileName'] = fileName;
 
             router.addImage(image, (err, docs) => {
                 if (err) {
                     console.log(err.message);
                     throw err;
                 }
+                console.log("DTata", docs);
                 console.log("Successfully inserted one image!");
                 res.render("products/home", {
 
@@ -186,7 +188,6 @@ router.get('/listProduct', (req, res) => {
         if (!err) {
             //console.log("data", docs);
             res.render("products/listProduct", {
-                image: 'data:image/png;base64,' + base64ArrayBuffer(docs.data),
                 listProduct: docs,
                 viewTitle: 'List of Products'
             });
@@ -354,11 +355,12 @@ router.post('/addproduct/:id', (req, res) => {
             console.log('image done');
             var productName = req.body.productName;
             var productPrice = req.body.productPrice;
-            var image = req.file.originalname;
+            var imagepath = req.file.originalname;
+            var id = req.body._id;
+            console.log("id-------", id);
 
 
-
-            Product.updateOne({ productName: productName, productPrice: productPrice, image: image }, function (err, result) {
+            Product.updateOne({ productName: productName, productPrice: productPrice, image: imagepath }, function (err, result) {
                 if (err) {
                     console.log(err)
                 } else {
@@ -432,8 +434,14 @@ router.get('/updateProduct/:id', (req, res) => {
 
     Product.findById(req.params.id, (err, doc) => {
         if (!err) {
-            console.log("Data", doc);
-            res.json(doc);
+            console.log("Data---", doc);
+            //res.json(doc);
+
+            res.render("partials/editForm", {
+                Product: doc,
+                //img_src: base64img.base64Sync('/public/camera2.jpg'),
+
+            });
             // res.render("products/addProduct", {
             //     viewTitle: "Update Product",
 
@@ -465,59 +473,5 @@ router.get('/listProduct/:id', (req, res) => {
 
 
 
-function base64ArrayBuffer(arrayBuffer) {
-    let base64 = '';
-    const encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-    const bytes = new Uint8Array(arrayBuffer);
-    const byteLength = bytes.byteLength;
-    const byteRemainder = byteLength % 3;
-    const mainLength = byteLength - byteRemainder;
-
-    let a;
-    let b;
-    let c;
-    let d;
-    let chunk;
-
-    // Main loop deals with bytes in chunks of 3
-    for (let i = 0; i < mainLength; i += 3) {
-        // Combine the three bytes into a single integer
-        chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
-
-        // Use bitmasks to extract 6-bit segments from the triplet
-        a = (chunk & 16515072) >> 18; // 16515072 = (2^6 - 1) << 18
-        b = (chunk & 258048) >> 12; // 258048   = (2^6 - 1) << 12
-        c = (chunk & 4032) >> 6; // 4032     = (2^6 - 1) << 6
-        d = chunk & 63;        // 63       = 2^6 - 1
-
-        // Convert the raw binary segments to the appropriate ASCII encoding
-        base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d];
-    }
-
-    // Deal with the remaining bytes and padding
-    if (byteRemainder === 1) {
-        chunk = bytes[mainLength];
-
-        a = (chunk & 252) >> 2; // 252 = (2^6 - 1) << 2
-
-        // Set the 4 least significant bits to zero
-        b = (chunk & 3) << 4; // 3   = 2^2 - 1
-
-        base64 += `${encodings[a]}${encodings[b]}==`;
-    } else if (byteRemainder === 2) {
-        chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1];
-
-        a = (chunk & 64512) >> 10; // 64512 = (2^6 - 1) << 10
-        b = (chunk & 1008) >> 4; // 1008  = (2^6 - 1) << 4
-
-        // Set the 2 least significant bits to zero
-        c = (chunk & 15) << 2; // 15    = 2^4 - 1
-
-        base64 += `${encodings[a]}${encodings[b]}${encodings[c]}=`;
-    }
-
-    return base64;
-}
 
 module.exports = router;
