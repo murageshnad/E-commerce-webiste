@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 var productDetailSchema = new mongoose.Schema({
-    productName: {
+    title: {
         type: String,
 
     },
-    productPrice: {
+    price: {
         type: Number,
 
 
@@ -14,8 +14,12 @@ var productDetailSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    image: String,
-    fileName: String,
+    imagePath: String,
+    AddedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Shop',
+    }
+
 
 
 });

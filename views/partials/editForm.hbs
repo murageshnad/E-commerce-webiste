@@ -1,24 +1,20 @@
-<form action="" method="POST" class="editProductForm" enctype="multipart/form-data">
+<form action="" method="POST" id="editProductForm">
     <input type="hidden" name="_id" id="_id" value="{{Product._id}}">
     <div class="form-group">
         <label>Product Name</label>
-        <input type="text" class="form-control" name="product" value="{{Product.productName}}" id="product" required
-            autofocus required>
+        <input id="titles" type="text" class="form-control" name="titles" value="{{Product.title}}" required autofocus
+            required>
     </div>
     <div class="form-group">
         <label>Product Price</label>
-        <input type="text" class="form-control" name="price" value="{{Product.productPrice}}" id="price" required
-            data-eye required>
+        <input id="prices" type="text" class="form-control" name="prices" value="{{Product.price}}" required data-eye
+            required>
     </div>
     <div class="form-group">
-        <label for="exampleFormControlFile1"> Choose Product Image</label>
-        <small style="visibility: hidden;">Previous Image:{{Product.image}} </small>
-        <p>Update Image: <img id="output" src="" width="100" /></p>
-
-        <input type="file" class="form-control-file" name="imagepath" id="imagepath" value="{{Product.fileName}}"
-            onchange="loadFile(event)">
+        <label> Image URL</label>
+        <input type="text" class="form-control" name="Paths" id="Paths" value="{{Product.imagePath}}" required>
     </div>
-    <button type="submit" id="addingProduct" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary update" data-type="{{Product._id}}">Submit</button>
 </form>
 <script>
     var loadFile = function (event) {

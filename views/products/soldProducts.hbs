@@ -1,12 +1,12 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <!-- Sidebar  -->
-<!-- script src="/assests/js/addProduct/addProduct.js"></script -->
 <nav id="sidebar">
     <div class="sidebar-header">
 
-
-        <h3>Admin Dashboard</h3>
-        <p class="text-left" style="color: black;">Admin: {{ user.username }}</p>
-
+        <a href="/login">
+            <h3>Admin Dashboard</h3>
+        </a>
 
 
     </div>
@@ -22,7 +22,10 @@
                     <a href="/home/addProduct">Add product</a>
                 </li>
                 <li>
-                    <a href="/home/listProduct">View Products</a>
+                    <a href="/home/listProduct">View All Products</a>
+                </li>
+                <li>
+                    <a href="/home/soldProducts">View Sold Products</a>
                 </li>
 
             </ul>
@@ -34,12 +37,12 @@
 
 </nav>
 
-<!-- Page Content  -->
+
 <div id="content">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a href="/home/logout">
+            <a href="/login">
                 <p style="color:black;float:right;">LOG OUT</p>
             </a>
 
@@ -53,35 +56,51 @@
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item active">
                         {{!-- <a class="nav-link" href="/login">Log out --}}
+
             </div>
+
+
         </div>
     </nav>
     <div class="content">
-        <div class="container text-align-center">
-            <h2>{{viewTitle}}</h2>
+        <h3>{{viewTitle}}</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Product designation</th>
+                        <th>Unit price</th>
+                        <th>Quantity</th>
 
-            <form action="" method="POST">
-                <input type="hidden" name="_id" value="{{Product._id}}">
-                <div class="form-group">
-                    <label>Product Name</label>
-                    <input id="title" type="text" class="form-control" name="title" value="{{Product.title}}" required
-                        autofocus required>
-                </div>
-                <div class="form-group">
-                    <label>Product Price</label>
-                    <input id="price" type="text" class="form-control" name="price" value="{{Product.price}}" required
-                        data-eye required>
-                </div>
-                <div class="form-group">
-                    <label> Image URL</label>
-                    <input type="text" class="form-control" name="imagePath" id="imagePath"
-                        value="{{Product.imagePath}}" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# each products }}
+
+                    <tr>
+
+                        <td>{{ this.item.title }}</td>
+                        <td>{{ this.item.price }}</td>
+                        <td>{{this.qty}}</td>
+
+
+
+
+                    </tr>
+
+                    {{/each}}
+                </tbody>
+            </table>
+
+
+
         </div>
 
+
     </div>
+
+
 
 
 

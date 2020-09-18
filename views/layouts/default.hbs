@@ -319,7 +319,8 @@
     <!-- JS dependencies -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
     </script>
-    <!--script type="text/javascript" src="/js/addProduct/addProduct.js"></script-->
+    <script type="text/javascript" src="{{host}}/js/addProduct/addProduct.js"></script>
+
 
     <!-- Bootstrap 4 dependency -->
 
@@ -361,15 +362,14 @@
                 //addingProdcut();
                 var formData = new FormData()
                 // the text data
-                formData.append('productName', document.getElementById('productName').value)
-                formData.append('productPrice', document.getElementById('productPrice').value)
+                formData.append('title', document.getElementById('title').value)
+                formData.append('price', document.getElementById('price').value)
 
                 // since inputs allow multi files submission, therefore files are in array
-                formData.append('myimage', document.getElementById('myimage').files[0])
-
-
-                console.log(document.getElementById('myimage'))
-                console.log(document.getElementById('myimage').files)
+                formData.append('imagePath', document.getElementById('imagePath').value)
+                console.log("title", document.getElementById('title').value)
+                console.log("price", document.getElementById('price').value)
+                console.log("path", document.getElementById('imagePath').value)
                 $.ajax({
                     method: 'POST',
                     processData: false,
@@ -379,7 +379,7 @@
                     data: formData,
                     success: function (response) {
                         if (response) {
-                            console.log("sucess");
+                            console.log("sucess", response);
                             window.location.reload();
                         }
                     },
@@ -419,53 +419,7 @@
 
             }
 
-            $('.editProductForm').submit(function () {
 
-                event.preventDefault();
-                jQuery.noConflict();
-                var product = document.getElementById('product').value;
-                console.log("product", product);
-                var price = document.getElementById('price').value;
-                console.log("price", price);
-                var imagepath = document.getElementById('imagepath').value;
-                console.log("imagepath", imagepath);
-
-
-                var formData = new FormData()
-                // the text data
-                formData.append('productName', document.getElementById('product').value)
-                formData.append('productPrice', document.getElementById('price').value)
-
-                // since inputs allow multi files submission, therefore files are in array
-                formData.append('myimage', document.getElementById('imagepath').files[0])
-                formData.append('_id', document.getElementById('_id').value)
-
-
-                console.log(document.getElementById('imagepath'))
-                console.log(document.getElementById('imagepath').files)
-                var id = document.getElementById('_id').value;
-                $.ajax({
-                    method: 'POST',
-                    processData: false,
-                    contentType: false,
-                    url: '/home/addProduct/' + id,
-                    //headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    data: formData,
-                    success: function (response) {
-                        if (response) {
-                            console.log("sucess");
-                            window.location.reload();
-                        }
-                    },
-                    error: function (error) {
-                        console.log('something went wrong !!...');
-                        console.log('error = ', error);
-                    },
-
-                });
-
-
-            });
 
             /* $('#list').on('click', function (responseTxt, statusTxt, xhr) {
                  event.preventDefault();

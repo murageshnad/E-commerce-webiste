@@ -5,6 +5,7 @@ mongoose.connect('mongodb://localhost:27017/DMARTDB', { useNewUrlParser: true },
     else { console.log('Error in DB connection : ' + err) }
 });
 
-require('./user.model');
+
 require('./shop.model');
 require('./product.model');
+require('./cart.model');
