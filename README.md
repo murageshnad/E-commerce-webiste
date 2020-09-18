@@ -13,4 +13,5 @@ Dashboard Page
 ![Screenshot from 2020-09-18 16-03-06](https://user-images.githubusercontent.com/42669128/93588504-22742080-f9c9-11ea-844a-84a25d68606d.png)
 
 
-Add products and displaying products according to the Shop owner added.
+Add products ,updated ,Delete and displaying products according to the Shop owner added.
+![Screenshot from 2020-09-18 16-03-16](https://user-images.githubusercontent.com/42669128/93588945-be9e2780-f9c9-11ea-8980-b1d3dcc296b0.png)
