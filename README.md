@@ -1,6 +1,6 @@
 # E-commerce-website
 
-This project is about E-commerce Application it using mongodb,Node js and Handlebars Technologies..
+This project is about E-commerce Application it using mongodb,Node js and Handlebars,jquery For Aunthentication passport local strategy Technologies..
  it includes Admin side admin functionalities like Adding product,delete and view products.
  
  
