@@ -15,10 +15,13 @@ var productDetailSchema = new mongoose.Schema({
         default: Date.now
     },
     imagePath: String,
-    AddedBy: {
+    AddedBy:
+    {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Shop',
+        ref: 'Shop'
     }
+
+
 
 
 

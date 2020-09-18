@@ -156,19 +156,44 @@ router.get('/modal', (req, res) => {
 // });
 
 router.get('/listProduct', (req, res) => {
-    console.log("id", req.params.id);
-    Product.find((err, docs) => {
+    // Shop.findOne({ _id: req.params.id })
+    //     .populate("AddedBy")
+    //     .exec((err, AddedBy) => {
+    //         console.log(AddedBy);
+    //     });
+    // res.render("products/listProduct", {
+
+    //     viewTitle: 'List of Products'
+    // });
+    // User.findById(req.params.id, (err, doc) => {
+    //     if (!err) {
+    //         console.log('updated', doc);
+    //     }
+    // });
+    var user_id = req.user._id;
+    console.log('id---', user_id);
+    Shop.find({ 'createdBy': user_id }, (err, doc) => {
         if (!err) {
-            console.log("product list", docs);
-            res.render("products/listProduct", {
-                listProduct: docs,
-                viewTitle: 'List of Products'
-            });
+            console.log('updated', doc[0]._id);
         }
-        else {
-            console.log('Error in retrieving  list :' + err);
-        }
+
+
+        Product.find({ 'AddedBy': doc[0]._id }, (err, docs) => {
+            if (!err) {
+                console.log("id", req.user);
+                //console.log("product list", docs);
+                res.render("products/listProduct", {
+                    listProduct: docs,
+                    viewTitle: 'List of Products'
+                });
+            }
+            else {
+                console.log('Error in retrieving  list :' + err);
+            }
+        });
     });
+
+
 });
 
 router.get('/register', (req, res) => {
@@ -381,7 +406,7 @@ router.post('/updateProduct/:id', (req, res) => {
         }
     });
 
-    res.redirect('/home/listProduct');
+    res.end('updtaed');
 
 });
 
@@ -394,22 +419,23 @@ router.post('/updateProduct/:id', (req, res) => {
 router.post('/addProduct', (req, res) => {
     var objs = {};
     console.log("inside");
-    Shop.findOne(req.params.id, (err, doc) => {
+    var user_id = req.user._id;
+    console.log('id---', user_id);
+    Shop.find({ 'createdBy': user_id }, (err, doc) => {
         if (!err) {
-            console.log('docs', doc._id);
-            objs.id = doc._id;
+            console.log('updated', doc[0]._id);
         }
-        console.log('docs--', objs.id);
+
         // everything worked fine
         console.log("productName:", req.body.title);
         console.log("productPrice:", req.body.price);
-        console.log('id', obj.id);
+
         console.log('image done');
         var image = {};
         image['title'] = req.body.title;
         image['price'] = req.body.price;
         image['imagePath'] = req.body.imagePath;
-        image['AddedBy'] = objs.id;
+        image['AddedBy'] = doc[0]._id;
 
         router.addImage(image, (err, docs) => {
             if (err) {
@@ -442,6 +468,17 @@ router.get('/updateProduct/:id', (req, res) => {
 
         }
     });
+    console.log('dd', req.params.id);
+    // Product.find({ "_id": req.params.id })
+    //     .populate("AddedBy")
+    //     .exec(function (error, data) {
+    //         if (error) {
+    //             console.log(error);
+    //         } else {
+    //             console.log('data', data);
+    //             res.json(data);
+    //         }
+    //     });
 });
 
 

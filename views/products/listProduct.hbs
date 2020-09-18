@@ -4,7 +4,7 @@
 <nav id="sidebar">
     <div class="sidebar-header">
 
-        <a href="/login">
+        <a href="/home/index">
             <h3>Admin Dashboard</h3>
         </a>
 
@@ -90,7 +90,8 @@
                                 <input type="text" class="form-control" name="imagePath" id="imagePath"
                                     value="{{Product.imagePath}}" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary addProduct"
+                                data-type="{{Product._id}}">Submit</button>
                         </form>
                     </div>
 
